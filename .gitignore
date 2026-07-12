@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual Environment
+.venv/
+venv/
+
+# Environment Variables
+.env
+.ENV
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Downloads
+Downloads/
+
+# Whisper Models
+models/
+
+# Logs
+*.log
+
+# Python cache
+.pytest_cache/
+.ipynb_checkpoints/
