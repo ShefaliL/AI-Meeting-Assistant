@@ -1,0 +1,65 @@
+# Core App
+streamlit>=1.37.0
+
+# LangChain
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
+
+# Mistral AI
+langchain-mistralai>=0.2.0
+mistralai>=1.0.0
+
+# Whisper Speech-to-Text
+openai-whisper
+torch
+ffmpeg-python
+
+# YouTube Audio Download
+yt-dlp
+
+# Audio Processing
+pydub
+
+# Translation
+deep-translator
+
+# Vector Database
+chromadb>=0.5.0
+
+# Embeddings
+sentence-transformers
+huggingface-hub
+
+# RAG & Retrieval
+faiss-cpu
+
+# PDF Export
+fpdf2
+reportlab
+
+# Document Processing
+pypdf
+
+# Environment Variables
+python-dotenv
+
+# Data Handling
+pandas
+numpy
+
+# HTTP Requests
+requests
+
+# Utilities
+tqdm
+
+# Optional Tokenizer
+tiktoken
+
+# File Upload Support
+python-multipart
+
+# Logging
+loguru
