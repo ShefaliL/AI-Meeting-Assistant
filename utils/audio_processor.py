@@ -54,3 +54,17 @@ def split_audio_into_chunks(wav_path:str, chunk_duration:int=10) -> list:
     return chunks
 
 print(split_audio_into_chunks(data_final))
+
+
+def process_input(source: str) -> list:
+    if source.startswith("http://") or source.startswith("https://"):
+        print("Detected YouTube URL. Downloading audio...")
+        wav_path = download_yt_audio(source)
+    else:
+        print("Detected local file. Converting to WAV...")
+        wav_path = convert_audio_to_wav(source)
+
+    print("Chunking audio...")
+    chunks = split_audio_into_chunks(wav_path)
+    print(f"Audio ready — {len(chunks)} chunk(s) created.")
+    return chunks

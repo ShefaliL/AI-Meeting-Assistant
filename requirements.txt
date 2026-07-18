@@ -10,6 +10,7 @@ ffmpeg-python>=0.2.0              # FFmpeg bindings (FFmpeg binary must be insta
 openai-whisper>=20231117          # OpenAI Whisper (runs locally)
 torch>=2.2.0                      # PyTorch backend for Whisper
 torchaudio>=2.2.0                 # Audio utilities for PyTorch
+numba==0.62.1
 
 # ── Translation (Hindi → English) ─────────────────────────────────────────────
 deep-translator>=1.11.4           # Lightweight translation wrapper (Google backend)
@@ -39,6 +40,6 @@ fpdf2>=2.7.9                      # Lightweight alternative PDF library
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
 python-dotenv>=1.0.0              # Load API keys from .env
-numpy>=1.26.0
+numpy>=1.26.0,<2.0
 tqdm>=4.66.0                      # Progress bars
 requests>=2.32.0
