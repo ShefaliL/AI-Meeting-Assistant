@@ -1,7 +1,10 @@
-import whisper
+import math
 import os
+import subprocess
+import wave
+
 import requests
-from pydub import AudioSegment
+import whisper
 
 # Sarvam's sync STT-translate API rejects audio longer than 30s.
 # We slice each chunk into 25s pieces (with a 5s safety margin) before sending.
@@ -33,7 +36,11 @@ def transcribe_chunk_whisper(chunk_path: str) -> str:
 
     model = load_model()  
 
-    result = model.transcribe(chunk_path, task="transcribe")  
+    result = model.transcribe(
+        chunk_path,
+        task="transcribe",
+        language="en",
+    )  
     return result["text"]  
 
 
@@ -60,6 +67,19 @@ def _send_to_sarvam(piece_path: str) -> str:
     return response.json().get("transcript", "")
 
 
+def _run_ffmpeg(args):
+    result = subprocess.run(["ffmpeg", *args], capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "ffmpeg failed")
+
+
+def _get_audio_duration_seconds(input_file: str) -> float:
+    with wave.open(input_file, "rb") as wav_file:
+        frames = wav_file.getnframes()
+        rate = wav_file.getframerate()
+        return frames / float(rate)
+
+
 def transcribe_chunk_sarvam(chunk_path: str) -> str:
     """
     Sarvam sync API only accepts ≤30s audio. We split this chunk into
@@ -68,16 +88,15 @@ def transcribe_chunk_sarvam(chunk_path: str) -> str:
     if not SARVAM_API_KEY:
         raise RuntimeError("SARVAM_API_KEY is not set in environment / .env")
 
-    audio = AudioSegment.from_wav(chunk_path)
-    piece_ms = SARVAM_PIECE_SECONDS * 1000
+    duration_seconds = _get_audio_duration_seconds(chunk_path)
+    total_pieces = max(1, math.ceil(duration_seconds / SARVAM_PIECE_SECONDS))
 
     full_text = ""
-    total_pieces = (len(audio) + piece_ms - 1) // piece_ms
-
-    for i, start in enumerate(range(0, len(audio), piece_ms)):
-        piece = audio[start: start + piece_ms]
+    for i in range(total_pieces):
+        start_seconds = i * SARVAM_PIECE_SECONDS
+        end_seconds = min(start_seconds + SARVAM_PIECE_SECONDS, duration_seconds)
         piece_path = f"{chunk_path}_sv_{i}.wav"
-        piece.export(piece_path, format="wav")
+        _run_ffmpeg(["-y", "-i", chunk_path, "-ss", str(start_seconds), "-to", str(end_seconds), "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", piece_path])
 
         try:
             print(f"  → Sarvam piece {i + 1}/{total_pieces} ...")
@@ -94,8 +113,12 @@ def transcribe_chunk(chunk_path: str, language: str = "english") -> str:
     Route one chunk to Whisper or Sarvam depending on language choice.
     - english  → Whisper (local model)
     - hinglish → Sarvam (translates to English while transcribing)
+    If Sarvam is not configured, fall back to local Whisper.
     """
     if language.lower() == "hinglish":
+        if not SARVAM_API_KEY:
+            print("SARVAM_API_KEY not set; falling back to local Whisper transcription.")
+            return transcribe_chunk_whisper(chunk_path)
         return transcribe_chunk_sarvam(chunk_path)
     return transcribe_chunk_whisper(chunk_path)
 
