@@ -140,4 +140,4 @@ def transcribe_all(chunks: list, language: str = "english") -> str:
 
     print("Transcription complete.")
 
-    return full_transcript.strip()  
+    return full_transcript.strip()
