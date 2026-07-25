@@ -22,6 +22,9 @@ Downloads/
 # Whisper Models
 models/
 
+# Vector store (generated locally)
+vector_db/
+
 # Logs
 *.log
 
