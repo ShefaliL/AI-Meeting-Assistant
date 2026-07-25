@@ -20,14 +20,14 @@ def get_llm():
 def split_transcript(transcript: str) -> list:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=3000,
-        chunk_overlap=200,
+        chunk_overlap=200
     )
     return splitter.split_text(transcript)
 
 def summarize(transcript: str) -> str:
     llm = get_llm()
     map_prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful assistant that summarizes meeting transcripts."),
+        ("system", "Summarize this portion of a meeting transcript concisely."),
         ("human","{text}")
     ]
     )
@@ -40,13 +40,16 @@ def summarize(transcript: str) -> str:
     combined = "\n\n".join(chunk_summaries) 
 
     combined_prompt = ChatPromptTemplate.from_messages([
-        ("system", 
-         "You are a helpful assistant that summarizes meeting transcripts."),
+        (
+            "system", 
+            "You are an expert meeting summarizer. Combine these partial summaries "
+            "into one final professional meeting summary in bullet points.",
+        ),
         ("human","{text}")
     ])
 
     combined_chain = ( # runnablePassthrough works like it sends forwarding the input to the next step without any changes
-        RunnablePassthrough() | Runnablelambda(lambda x: {"text": x}) | combined_prompt | llm | StrOutputParser()
+        RunnablePassthrough() | RunnableLambda(lambda x: {"text": x}) | combined_prompt | llm | StrOutputParser()
     )
 
     return combined_chain.invoke(combined)
@@ -55,7 +58,11 @@ def generate_title(transcript: str) -> str:
     llm = get_llm()
 
     title_prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful assistant that generates a concise title for meeting transcripts."),
+        (
+            "system",
+            "Based on the meeting transcript, generate a short professional meeting title "
+            "(max 8 words). Only return the title, nothing else.",
+        ),
         ("human", "{text}"),
     ])
 

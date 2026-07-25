@@ -1,9 +1,11 @@
-# We need to extract actionable items , meaning if any video which is uploaded has some actions/steps to be performed. Consist of decision making, and questions as well
+# We need to extract actionable items, meaning if any video 
+# which is uploaded has some actions/steps to be performed.
+# Consists of decision making, and questions as well.
 
-from langchain.mistralai import ChatMistralAI
-from langchain.prompts.chat import ChatPromptTemplate
-from langchain._core.output_parsers import strOutputParser
-from langchain.runnables import RunnablePassthrough, RunnableLambda
+from langchain_mistralai import ChatMistralAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 
 import os
 
@@ -12,11 +14,15 @@ def get_llm():
 
 def build_chain(system_prompt: str):
     llm = get_llm()
-    return (RunnablePassthrough() | RunnableLambda(lambda x: {"text": x}) | ChatPromptTemplate.from_messages
-            ([("system", system_prompt), ("human", "{text}")])| llm | strOutputParser())
+    return (
+        RunnablePassthrough() | RunnableLambda(lambda x: {"text": x}) | ChatPromptTemplate.from_messages([
+            ("system", system_prompt),
+            ("human", "{text}"),
+    ]) | llm | StrOutputParser()
+    )
 
 
-def extract_actionable_items(transcript: str) -> str:
+def extract_action_items(transcript: str) -> str:
     chain = build_chain("You are an expert AI meeting analyst. From the meeting transcript, "
         "extract all action items. For each provide:\n"
         "- Task description\n"
@@ -37,7 +43,8 @@ def extract_key_decisions(transcript: str) -> str:
 
 def extract_questions(transcript: str) -> str:
     chain = build_chain(
-        "from the meeting transcript, extract all unresolved questions or topics needing follow-up. " 
-        "Format as a numbered list. If none found say 'No open questions found.'" 
+        "From the meeting transcript, extract all unresolved questions "
+        "or topics needing follow-up. Format as a numbered list. "
+        "If none found say 'No open questions found.' " 
     )
     return chain.invoke(transcript)
