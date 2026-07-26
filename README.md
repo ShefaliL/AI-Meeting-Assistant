@@ -1,4 +1,5 @@
 AI Meeting Assistant: Multilingual RAG Meeting Intelligence System
+
 The AI Meeting Assistant is a high-performance, end-to-end AI pipeline designed to transform raw meeting recordings—from local files or YouTube links—into searchable, actionable organizational knowledge
 . By combining state-of-the-art speech recognition, Large Language Models (LLMs), and Retrieval-Augmented Generation (RAG), this system eliminates manual note-taking and ensures no decision or action item is ever lost
 
