@@ -1,59 +1,240 @@
-AI Meeting Assistant: Multilingual RAG Meeting Intelligence System
+ # AI Meeting Assistant: Multilingual RAG Meeting Intelligence System
 
-The AI Meeting Assistant is a high-performance, end-to-end AI pipeline designed to transform raw meeting recordings—from local files or YouTube links—into searchable, actionable organizational knowledge
-. By combining state-of-the-art speech recognition, Large Language Models (LLMs), and Retrieval-Augmented Generation (RAG), this system eliminates manual note-taking and ensures no decision or action item is ever lost
+## 📖 Project Overview
 
-🚀 Overview
-Modern teams often suffer from "meeting fatigue," where hours of recordings are rarely reviewed and critical insights are buried
-. This application provides a Streamlit-based interface to process these recordings, providing high-accuracy multilingual transcription, intelligent summarization, and a context-aware chat interface
+The **AI Meeting Assistant** is a high-performance, end-to-end AI application that transforms meeting recordings into searchable, actionable organizational knowledge. Whether processing a local audio/video file or a YouTube recording, the system leverages state-of-the-art Speech Recognition, Large Language Models (LLMs), and Retrieval-Augmented Generation (RAG) to eliminate manual note-taking and ensure that important decisions, discussions, and action items are never lost.
 
-✨ Key Features
-Multilingual Transcription: Local processing for English using OpenAI Whisper and high-accuracy transcription/translation for Hindi and Hinglish via Sarvam AI
-.Intelligent Summarization: Automated generation of concise meeting summaries using Mistral AI
-.Insight Extraction: Automatically identifies and categorizes:
-Action Items (with assigned owners and deadlines)
-.Key Decisions and Open Questions
-.Follow-up Tasks
-.Conversational Search (RAG): A "Chat with Meeting" feature powered by LangChain and ChromaDB, allowing users to ask specific questions grounded in the actual meeting transcript
-.Professional Export: Generate and download comprehensive meeting reports in PDF or TXT formats
+The application provides a simple **Streamlit** interface where users can upload recordings, generate meeting intelligence, and interact with the transcript through an AI-powered chat interface.
 
-🛠️ Technology Stack
-Programming Language: Python
-Speech Recognition: OpenAI Whisper (Local) & Sarvam AI (Cloud)
-Large Language Model: Mistral AI
-Orchestration Framework: LangChain LCEL
-Vector Database: ChromaDB
-Embeddings: HuggingFace Sentence Transformers
-Frontend: Streamlit
-Audio Utilities: yt-dlp, FFmpeg
+---
 
-🏗️ System Architecture
-The system follows a sophisticated data pipeline to ensure accuracy and speed
-: Ingestion: Accepts YouTube URLs or local audio/video uploads
-.Audio Processing: Extracts and cleans audio using FFmpeg and yt-dlp
-.Language Detection & Transcription: Routes audio to Whisper or Sarvam AI based on the detected language
-.Meeting Intelligence: Mistral AI processes the transcript to extract summaries and structured insights
-.Vector Storage: Transcripts are chunked, embedded, and stored in ChromaDB
-.RAG Interaction: Users query the meeting through a retriever-generator loop for context-aware responses
+## 🚀 Features
 
+### 🌍 Multilingual Transcription
+- English transcription using **OpenAI Whisper** (local)
+- Hindi and Hinglish transcription & translation using **Sarvam AI**
 
-💻 Installation & Setup
-Prerequisites
-Python 3.9+
-FFmpeg installed on your system path
-Steps
-Clone the repository:
-Install dependencies:
-Configure Environment Variables: Create a .env file and add your API keys for Sarvam AI and Mistral AI.
-Run the Application:
+### 📝 Intelligent Meeting Summaries
+- AI-generated meeting summaries powered by **Mistral AI**
 
-📈 Future Enhancements
-Speaker Diarization: Identifying individual contributors by name
-.Live Transcription: Integration for real-time meetings
-.Platform Integration: Native support for Zoom, Google Meet, and Microsoft Teams
-.Sentiment Analysis: Tracking the emotional tone and engagement of discussions
+### 📌 Meeting Insights
+Automatically extracts:
+- ✅ Action Items
+- 👤 Assigned Owners
+- 📅 Deadlines
+- 🤝 Key Decisions
+- ❓ Open Questions
+- 🔄 Follow-up Tasks
 
+### 💬 Chat with Your Meeting (RAG)
+Ask natural language questions about your meeting using:
+- LangChain
+- ChromaDB
+- HuggingFace Embeddings
 
-📝 Reflection
-This project was developed as a graduate-level capstone to bridge the gap between AI theory and practical workplace utility
-. It demonstrates the power of Retrieval-Augmented Generation in creating reliable, hallucination-free AI tools for professional environments
+The assistant retrieves relevant transcript sections before generating responses, reducing hallucinations and improving accuracy.
+
+### 📄 Export Reports
+Generate downloadable meeting reports in:
+- PDF
+- TXT
+
+---
+
+# 🛠️ Technology Stack
+
+| Component | Technology |
+|-----------|------------|
+| Programming Language | Python |
+| Frontend | Streamlit |
+| Speech Recognition | OpenAI Whisper, Sarvam AI |
+| Large Language Model | Mistral AI |
+| RAG Framework | LangChain (LCEL) |
+| Vector Database | ChromaDB |
+| Embeddings | HuggingFace Sentence Transformers |
+| Audio Processing | FFmpeg, yt-dlp |
+
+---
+
+# 🏗️ System Architecture
+
+```
+YouTube URL / Local Audio
+            │
+            ▼
+     Audio Extraction
+    (yt-dlp / FFmpeg)
+            │
+            ▼
+ Language Detection
+            │
+     ┌──────┴──────┐
+     │             │
+     ▼             ▼
+ Whisper      Sarvam AI
+ (English)   (Hindi/Hinglish)
+      │
+      ▼
+ Meeting Transcript
+      │
+      ▼
+   Mistral AI
+      │
+      ▼
+Summary + Action Items +
+Decisions + Questions
+      │
+      ▼
+Chunking & Embeddings
+      │
+      ▼
+    ChromaDB
+      │
+      ▼
+ LangChain RAG Pipeline
+      │
+      ▼
+ Chat with Meeting
+```
+
+---
+
+# 💻 Installation
+
+## Prerequisites
+
+- Python 3.9+
+- FFmpeg installed and added to your system PATH
+- Git
+
+---
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/ShefaliL/AI-Meeting-Assistant.git
+
+cd AI-Meeting-Assistant
+```
+
+---
+
+## Create a Virtual Environment
+
+### macOS/Linux
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Windows
+
+```bash
+python -m venv .venv
+
+.venv\Scripts\activate
+```
+
+---
+
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Configure Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+MISTRAL_API_KEY=your_mistral_api_key
+SARVAM_API_KEY=your_sarvam_api_key
+```
+
+> **Note:** Keep your API keys private. Never commit the `.env` file to GitHub.
+
+---
+
+# ▶️ Running the Application
+
+Launch the Streamlit application:
+
+```bash
+streamlit run app.py
+```
+
+Once the application starts:
+
+1. Upload a local audio/video recording **or**
+2. Paste a YouTube URL
+3. Generate the transcript
+4. View AI-generated summaries and insights
+5. Chat with your meeting using the RAG interface
+6. Export the meeting report as PDF or TXT
+
+---
+
+# 📂 Project Structure
+
+```
+AI-Meeting-Assistant/
+│
+├── app.py
+├── requirements.txt
+├── .env.example
+├── README.md
+├── audio_process.py
+├── utils/
+├── data/
+├── vector_store/
+└── reports/
+```
+
+---
+
+# 👥 Team Members
+
+| Name | GitHub |
+|------|---------|
+| Shefali Luley | https://github.com/ShefaliL |
+| Mitaali Dayal | https://github.com/mitaalidayal |
+
+---
+
+# ⚙️ Important Setup Instructions
+
+- Install **FFmpeg** before running the project.
+- Ensure Python **3.9 or higher** is installed.
+- Add your **Mistral AI** and **Sarvam AI** API keys to the `.env` file.
+- Do **not** commit your `.env` file or API keys to GitHub.
+- If processing YouTube videos, ensure `yt-dlp` is installed through the project dependencies.
+
+---
+
+# 📈 Future Enhancements
+
+- 🎙️ Speaker Diarization
+- ⚡ Live Meeting Transcription
+- 📹 Zoom, Google Meet, and Microsoft Teams Integration
+- 😊 Sentiment Analysis
+- 📅 Calendar & Task Manager Integration
+- 📧 Automatic Email Meeting Summaries
+
+---
+
+# 📝 Reflection
+
+This project was developed as a graduate-level capstone to bridge the gap between modern AI research and practical workplace productivity. By combining multilingual speech recognition, Retrieval-Augmented Generation (RAG), vector search, and Large Language Models, the AI Meeting Assistant demonstrates how AI can create reliable, context-aware meeting intelligence while minimizing hallucinations and improving information retrieval for professional teams.
+
+---
+
+## 📄 License
+
+This project is intended for educational and research purposes.
+
+---
+⭐ If you found this project useful, consider giving it a star on GitHub!
