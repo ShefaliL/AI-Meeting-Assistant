@@ -6,6 +6,12 @@ The **AI Meeting Assistant** is a high-performance, end-to-end AI application th
 
 The application provides a simple **Streamlit** interface where users can upload recordings, generate meeting intelligence, and interact with the transcript through an AI-powered chat interface.
 
+## 🌐 Live Application
+
+Try the AI Meeting Assistant here:
+
+🔗 **https://ai-meeting-minutes.streamlit.app/**
+
 ---
 
 ## 🚀 Features
